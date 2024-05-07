@@ -6,12 +6,12 @@
     nombrelibro/1,
     edad/1,
     genero/1,
-    patas/1,
-    tarsos/1,
-    loras/1,
-    alas/1,
-    vientre/1,
-    corona/1,
+    ocupacion/1,
+    estado/1,
+    fechanacimiento/1,
+    fechafallecimiento/1,
+    ciudadorigen/1,
+    habilidadespecial/1,
     espalda/1,
     habitat/1,
     alimentacion/1,
@@ -36,8 +36,8 @@ mostrar_libros_cargadas :-
         libro(_, _, _, _, _, _, _, _, _, _, _, _, _)
     ->  % Usar forall/2 para iterar sobre las libros si existen
         forall(
-            libro(Nombre, NombreDelLibro, Edad, Genero, Patas, Tarsos, Loras, Alas, Vientre, Corona, Espalda, Habitat, Alimentacion),
-            format('Personaje: ~w, NombreDelLibro: ~w, Edad: ~w, Genero: ~w, Patas: ~w, Tarsos: ~w, Loras: ~w, Alas: ~w, Vientre: ~w, Corona: ~w, Espalda: ~w, Habitat: ~w, Alimentacion: ~w\n', [Nombre, NombreDelLibro, Edad, Genero, Patas, Tarsos, Loras, Alas, Vientre, Corona, Espalda, Habitat, Alimentacion])
+            libro(Nombre, NombreDelLibro, Edad, Genero, Ocupacion, Estado, Fechanacimiento, Fechafallecimiento, Ciudadorigen, Habilidadespecial, Espalda, Habitat, Alimentacion),
+            format('Personaje: ~w, NombreDelLibro: ~w, Edad: ~w, Genero: ~w, Ocupacion: ~w, Estado: ~w, Fechanacimiento: ~w, Fechafallecimiento: ~w, Ciudadorigen: ~w, Habilidadespecial: ~w, Espalda: ~w, Habitat: ~w, Alimentacion: ~w\n', [Nombre, NombreDelLibro, Edad, Genero, Ocupacion, Estado, Fechanacimiento, Fechafallecimiento, Ciudadorigen, Habilidadespecial, Espalda, Habitat, Alimentacion])
         )
     ;   % En caso de que no haya libros, mostrar un mensaje
         format('No hay libros registrados en la base de conocimientos.\n')
@@ -87,14 +87,14 @@ start_gui :-
     send(MiVentana, append, new(NombreDelLibro, text_item('Libro'))),
     send(MiVentana, append, new(Edad, text_item('Edad'))),
     send(MiVentana, append, new(Genero, text_item('Genero'))),
-    send(MiVentana, append, new(Patas, text_item('Ocupacion'))),
-    send(MiVentana, append, new(Tarsos, text_item('Estado'))),
+    send(MiVentana, append, new(Ocupacion, text_item('Ocupacion'))),
+    send(MiVentana, append, new(Estado, text_item('Estado'))),
 
     % Los siguientes campos son opcionales
-    send(MiVentana, append, new(Loras, text_item('Fecha de nacimiento'))),
-    send(MiVentana, append, new(Alas, text_item('Fecha de fallecimiento'))),
-    send(MiVentana, append, new(Vientre, text_item('Ciudad de origen'))),
-    send(MiVentana, append, new(Corona, text_item('Habilidad especial'))),
+    send(MiVentana, append, new(Fechanacimiento, text_item('Fecha de nacimiento'))),
+    send(MiVentana, append, new(Fechafallecimiento, text_item('Fecha de fallecimiento'))),
+    send(MiVentana, append, new(Ciudadorigen, text_item('Ciudad de origen'))),
+    send(MiVentana, append, new(Habilidadespecial, text_item('Habilidad especial'))),
     send(MiVentana, append, new(Espalda, text_item('Complexion'))),
     send(MiVentana, append, new(Habitat, text_item('Color de piel'))),
     send(MiVentana, append, new(Alimentacion, text_item('Altura'))),
@@ -102,8 +102,8 @@ start_gui :-
     % Crear botones
     % Boton para identificar libro por sus atributos
     send(MiVentana, append, button('Identificar', message(@prolog, buscar_libro,
-    NombreDelLibro?selection, Edad?selection, Genero?selection, Patas?selection, Tarsos?selection,
-    Loras?selection, Alas?selection, Vientre?selection, Corona?selection, Espalda?selection,
+    NombreDelLibro?selection, Edad?selection, Genero?selection, Ocupacion?selection, Estado?selection,
+    Fechanacimiento?selection, Fechafallecimiento?selection, Ciudadorigen?selection, Habilidadespecial?selection, Espalda?selection,
     Habitat?selection, Alimentacion?selection))),
 
     % Boton para identificar libro por solo su nombre
@@ -111,8 +111,8 @@ start_gui :-
 
     % Boton para agregar libro
     send(MiVentana, append, button('Agregar', message(@prolog, gui_agregar_libro,
-    NombreDelLibro?selection, Edad?selection, Genero?selection, Patas?selection, Tarsos?selection,
-    Loras?selection, Alas?selection, Vientre?selection, Corona?selection, Espalda?selection,
+    NombreDelLibro?selection, Edad?selection, Genero?selection, Ocupacion?selection, Estado?selection,
+    Fechanacimiento?selection, Fechafallecimiento?selection, Ciudadorigen?selection, Habilidadespecial?selection, Espalda?selection,
     Habitat?selection, Alimentacion?selection))),
 
     % Boton para mostrar todos los libros de la base de conocimientos
@@ -128,29 +128,29 @@ start_gui :-
 
 
 % Se recogen los valores de los libros y su nombre
-gui_agregar_libro(NombreDelLibro, Edad, Genero, Patas, Tarsos, Loras, Alas, Vientre, Corona, Espalda, Habitat, Alimentacion) :-
+gui_agregar_libro(NombreDelLibro, Edad, Genero, Ocupacion, Estado, Fechanacimiento, Fechafallecimiento, Ciudadorigen, Habilidadespecial, Espalda, Habitat, Alimentacion) :-
 
     % Imprime los valores recibidos
-    format('Recibido - NombreDelLibro: ~w, Edad: ~w, Genero: ~w, Patas: ~w, Tarsos: ~w, Loras: ~w, Alas: ~w, Vientre: ~w, Corona: ~w, Espalda: ~w, Habitat: ~w, Alimentacion: ~w\n',
-        [NombreDelLibro, Edad, Genero, Patas, Tarsos, Loras, Alas, Vientre, Corona, Espalda, Habitat, Alimentacion]),
+    format('Recibido - NombreDelLibro: ~w, Edad: ~w, Genero: ~w, Ocupacion: ~w, Estado: ~w, Fechanacimiento: ~w, Fechafallecimiento: ~w, Ciudadorigen: ~w, Habilidadespecial: ~w, Espalda: ~w, Habitat: ~w, Alimentacion: ~w\n',
+        [NombreDelLibro, Edad, Genero, Ocupacion, Estado, Fechanacimiento, Fechafallecimiento, Ciudadorigen, Habilidadespecial, Espalda, Habitat, Alimentacion]),
 
 
     new(Diag, dialog('Agregar personaje')),
     send(Diag, append, new(Nombre, text_item(nombre))),
     send(Diag, append, button('Aceptar', message(@prolog, nuevaLibro,
-        Nombre?selection, NombreDelLibro, Edad, Genero, Patas, Tarsos, Loras, Alas, Vientre, Corona, Espalda, Habitat, Alimentacion, Diag))),
+        Nombre?selection, NombreDelLibro, Edad, Genero, Ocupacion, Estado, Fechanacimiento, Fechafallecimiento, Ciudadorigen, Habilidadespecial, Espalda, Habitat, Alimentacion, Diag))),
     send(Diag, open).
 
-nuevaLibro(NombreLibroInput, NombreDelLibro, Edad, Genero, Patas, Tarsos, Loras, Alas, Vientre, Corona, Espalda, Habitat, Alimentacion, Diag) :-
+nuevaLibro(NombreLibroInput, NombreDelLibro, Edad, Genero, Ocupacion, Estado, Fechanacimiento, Fechafallecimiento, Ciudadorigen, Habilidadespecial, Espalda, Habitat, Alimentacion, Diag) :-
     % Realiza el assertz con los valores recolectados
     replace_spaces_with_underscores(NombreLibroInput, NombreLibro),
-    assertz(libro(NombreLibro, NombreDelLibro, Edad, Genero, Patas, Tarsos, Loras, Alas, Vientre, Corona, Espalda, Habitat, Alimentacion)),
+    assertz(libro(NombreLibro, NombreDelLibro, Edad, Genero, Ocupacion, Estado, Fechanacimiento, Fechafallecimiento, Ciudadorigen, Habilidadespecial, Espalda, Habitat, Alimentacion)),
 
     % Abre el archivo en modo de anexion
     open('libros.pl', append, File),
 
     % Escribe la informacion del libro en el archivo
-    maplist(ensure_value, [NombreDelLibro, Edad, Genero, Patas, Tarsos, Loras, Alas, Vientre, Corona, Espalda, Habitat, Alimentacion], FormattedValues),
+    maplist(ensure_value, [NombreDelLibro, Edad, Genero, Ocupacion, Estado, Fechanacimiento, Fechafallecimiento, Ciudadorigen, Habilidadespecial, Espalda, Habitat, Alimentacion], FormattedValues),
     format(File, 'libro(~w, ~w, ~w, ~w, ~w, ~w, ~w, ~w, ~w, ~w, ~w, ~w, ~w).\n', [NombreLibro|FormattedValues]),
 
     % Cierra el archivo
@@ -209,11 +209,11 @@ mostrar_libros :-
         libro(_, _, _, _, _, _, _, _, _, _, _, _, _)
     ->  % Usar forall/2 para iterar sobre las libros si existen
         forall(
-            libro(Nombre, NombreDelLibro, Edad, Genero, Patas, Tarsos, Loras, Alas, Vientre, Corona, Espalda, Habitat, Alimentacion),
+            libro(Nombre, NombreDelLibro, Edad, Genero, Ocupacion, Estado, Fechanacimiento, Fechafallecimiento, Ciudadorigen, Habilidadespecial, Espalda, Habitat, Alimentacion),
             (   % Construir la cadena de texto para cada libro con separadores
                 with_output_to(string(Str),
                     format('Nombre: ~w\nLibro: ~w\nEdad: ~w\nGenero: ~w\nOcupacion: ~w\nEstado: ~w\nFecha de nacimiento: ~w\nFecha de fallecimiento: ~w\nCiudad de origen: ~w\nHabilidad Especial: ~w\nComplexion: ~w\nColor de piel: ~w\nAltura: ~w\n: ---------------------------------------\n',
-                           [Nombre, NombreDelLibro, Edad, Genero, Patas, Tarsos, Loras, Alas, Vientre, Corona, Espalda, Habitat, Alimentacion])),
+                           [Nombre, NombreDelLibro, Edad, Genero, Ocupacion, Estado, Fechanacimiento, Fechafallecimiento, Ciudadorigen, Habilidadespecial, Espalda, Habitat, Alimentacion])),
                 % Agregar la cadena de texto al label
                 send(T, append, Str)
             )
@@ -251,15 +251,15 @@ buscar_libro_nombre :-
 identificar_libro_por_nombre(NombreLibroInput, DialogoBuscar) :-
     % Reemplaza espacios en el nombre del libro con guiones bajos
     replace(NombreLibroInput, NombreLibro),
-    (   libro(NombreLibro, NombreDelLibro, Edad, Genero, Patas, Tarsos, Loras, Alas, Vientre, Corona, Espalda, Habitat, Alimentacion)
+    (   libro(NombreLibro, NombreDelLibro, Edad, Genero, Ocupacion, Estado, Fechanacimiento, Fechafallecimiento, Ciudadorigen, Habilidadespecial, Espalda, Habitat, Alimentacion)
     ->  send(DialogoBuscar, destroy), % Cierra el dialogo de busqueda
-        mostrar_informacion_libro(NombreLibro, NombreDelLibro, Edad, Genero, Patas, Tarsos, Loras, Alas, Vientre, Corona, Espalda, Habitat, Alimentacion)
+        mostrar_informacion_libro(NombreLibro, NombreDelLibro, Edad, Genero, Ocupacion, Estado, Fechanacimiento, Fechafallecimiento, Ciudadorigen, Habilidadespecial, Espalda, Habitat, Alimentacion)
     ;   send(@display, inform, 'Personje no encontrado en la base de datos.'),
         fail
     ).
 
 % Funcion para mostrar la informacion del libro encontrado
-mostrar_informacion_libro(NombreLibro, NombreDelLibro, Edad, Genero, Patas, Tarsos, Loras, Alas, Vientre, Corona, Espalda, Habitat, Alimentacion) :-
+mostrar_informacion_libro(NombreLibro, NombreDelLibro, Edad, Genero, Ocupacion, Estado, Fechanacimiento, Fechafallecimiento, Ciudadorigen, Habilidadespecial, Espalda, Habitat, Alimentacion) :-
     new(DialogoResultado, dialog('Informacion del Personaje')),
 
     % Convertir los atributos a cadenas si son listas para su visualizacion
@@ -267,12 +267,12 @@ mostrar_informacion_libro(NombreLibro, NombreDelLibro, Edad, Genero, Patas, Tars
     lista_a_cadena(NombreDelLibro, NombreDelLibroString),
     lista_a_cadena(Edad, EdadString),
     lista_a_cadena(Genero, GeneroString),
-    lista_a_cadena(Patas, PatasString),
-    lista_a_cadena(Tarsos, TarsosString),
-    lista_a_cadena(Loras, LorasString),
-    lista_a_cadena(Alas, AlasString),
-    lista_a_cadena(Vientre, VientreString),
-    lista_a_cadena(Corona, CoronaString),
+    lista_a_cadena(Ocupacion, OcupacionString),
+    lista_a_cadena(Estado, EstadoString),
+    lista_a_cadena(Fechanacimiento, FechanacimientoString),
+    lista_a_cadena(Fechafallecimiento, FechafallecimientoString),
+    lista_a_cadena(Ciudadorigen, CiudadorigenString),
+    lista_a_cadena(Habilidadespecial, HabilidadespecialString),
     lista_a_cadena(Espalda, EspaldaString),
     lista_a_cadena(Habitat, HabitatString),
     lista_a_cadena(Alimentacion, AlimentacionString),
@@ -282,12 +282,11 @@ mostrar_informacion_libro(NombreLibro, NombreDelLibro, Edad, Genero, Patas, Tars
     send(DialogoResultado, append, label(nombrelibro, string('Libro: %s', NombreDelLibroString))),
     send(DialogoResultado, append, label(edad, string('Edad: %s', EdadString))),
     send(DialogoResultado, append, label(genero, string('Genero: %s', GeneroString))),
-    send(DialogoResultado, append, label(patas, string('Ocupacion: %s', PatasString))),
-    send(DialogoResultado, append, label(tarsos, string('Estado: %s', TarsosString))),
-    send(DialogoResultado, append, label(loras, string('Fecha de nacimiento: %s', LorasString))),
-    send(DialogoResultado, append, label(alas, string('Fecha de fallecimiento: %s', AlasString))),
-    send(DialogoResultado, append, label(vientre, string('Ciudad de origen: %s', VientreString))),
-    send(DialogoResultado, append, label(corona, string('Habilidad especial: %s', CoronaString))),
+    send(DialogoResultado, append, label(ocupacion, string('Ocupacion: %s', OcupacionString))),
+    send(DialogoResultado, append, label(fechanacimiento, string('Fecha de nacimiento: %s', FechanacimientoString))),
+    send(DialogoResultado, append, label(fechafallecimiento, string('Fecha de fallecimiento: %s', FechafallecimientoString))),
+    send(DialogoResultado, append, label(ciudadorigen, string('Ciudad de origen: %s', CiudadorigenString))),
+    send(DialogoResultado, append, label(habilidadespecial, string('Habilidad especial: %s', HabilidadespecialString))),
     send(DialogoResultado, append, label(espalda, string('Complexion: %s', EspaldaString))),
     send(DialogoResultado, append, label(habitat, string('Color de piel: %s', HabitatString))),
     send(DialogoResultado, append, label(alimentacion, string('Altura: %s', AlimentacionString))),
@@ -329,12 +328,12 @@ replace(Input, Output) :-
 
 
 % Identificar libro por sus atributos con el mayor numero de coincidencias
-buscar_libro(NombreDelLibro, Edad, Genero, Patas, Tarsos, Loras, Alas, Vientre, Corona, Espalda, Habitat, Alimentacion) :-
+buscar_libro(NombreDelLibro, Edad, Genero, Ocupacion, Estado, Fechanacimiento, Fechafallecimiento, Ciudadorigen, Habilidadespecial, Espalda, Habitat, Alimentacion) :-
     % Encuentra todas las libros con el conteo de coincidencias
     findall(Nombre-Coincidencias, (
-        libro(Nombre, NombreDelLibroLibro, EdadLibro, GeneroLibro, PatasLibro, TarsosLibro, LorasLibro, AlasLibro, VientreLibro, CoronaLibro, EspaldaLibro, HabitatLibro, AlimentacionLibro),
-        coincidencias([NombreDelLibro, Edad, Genero, Patas, Tarsos, Loras, Alas, Vientre, Corona, Espalda, Habitat, Alimentacion],
-                      [NombreDelLibroLibro, EdadLibro, GeneroLibro, PatasLibro, TarsosLibro, LorasLibro, AlasLibro, VientreLibro, CoronaLibro, EspaldaLibro, HabitatLibro, AlimentacionLibro],
+        libro(Nombre, NombreDelLibroLibro, EdadLibro, GeneroLibro, OcupacionLibro, EstadoLibro, FechanacimientoLibro, FechafallecimientoLibro, CiudadorigenLibro, HabilidadespecialLibro, EspaldaLibro, HabitatLibro, AlimentacionLibro),
+        coincidencias([NombreDelLibro, Edad, Genero, Ocupacion, Estado, Fechanacimiento, Fechafallecimiento, Ciudadorigen, Habilidadespecial, Espalda, Habitat, Alimentacion],
+                      [NombreDelLibroLibro, EdadLibro, GeneroLibro, OcupacionLibro, EstadoLibro, FechanacimientoLibro, FechafallecimientoLibro, CiudadorigenLibro, HabilidadespecialLibro, EspaldaLibro, HabitatLibro, AlimentacionLibro],
                       0, Coincidencias)
     ), LibrosConCoincidencias),
 
